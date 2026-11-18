@@ -514,6 +514,38 @@
       font-weight: 700;
     }
 
+    /* חיווי שליחת הטופס */
+    .form-status {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      min-height: 1.2em;
+      text-align: center;
+    }
+    .form-status.is-error   { color: #b00020; }
+    .form-status.is-pending { color: var(--text-muted); }
+    .form-status.is-success {
+      color: #0a7d52;
+      background: #eaf7f1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-weight: 600;
+    }
+    .form-status a { color: inherit; }
+
+    /* הדגשת אזור התשלום אחרי הרשמה מוצלחת */
+    .payment-box.is-highlighted {
+      animation: payPulse 1.1s ease 3;
+    }
+    @keyframes payPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 178, 169, 0); }
+      50%      { box-shadow: 0 0 0 10px rgba(0, 178, 169, .28); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .payment-box.is-highlighted { animation: none; outline: 3px solid var(--bit-turquoise); }
+    }
+
     /* Floating WhatsApp */
     .floating-wa {
       position: fixed;
@@ -707,8 +739,8 @@
             מספר המקומות מוגבל לשמירה על אווירה אינטימית. מלאי את פרטייך:
           </p>
 
-          <!-- חבר ל-Formspree או ל-Webhook של Google Sheets -->
-          <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <!-- הפרטים נשמרים בגוגל-שיט דרך Apps Script (ראי apps-script/Code.gs) -->
+          <form id="registerForm" novalidate>
             
             <div class="form-group">
               <label for="fullname">שם פרטי ומשפחה:</label>
@@ -730,10 +762,12 @@
               <input type="text" id="week" name="pregnancy_week" class="form-control" placeholder="לדוגמה: שבוע 28" required>
             </div>
 
-            <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">
+            <button type="submit" class="btn-cta" id="submitBtn" style="width: 100%; margin-top: 8px;">
               🌸 שליחת פרטים והמשך לתשלום
             </button>
           </form>
+
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
         </div>
 
         <!-- אזור תשלום בביט -->
@@ -770,13 +804,115 @@
   </a>
 
   <script>
+    /* כתובת ה-Web app של Apps Script. אחרי Deploy מדביקים אותה כאן. */
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEW-B8autD0aQV-6aaVq1kkS94BD1LMC2txr7VeZIhAn-41BeYNDIZqo-XbTYlXy-5/exec";
+
+    const BIT_NUMBER = "0526779649";
+    const BIT_DISPLAY = "052-6779649";
+    const WA_NUMBER = "972526779649";
+
+    /* ---------- העתקת מספר ביט ---------- */
     function copyBitNumber() {
-      const num = "0526779649";
-      navigator.clipboard.writeText(num).then(() => {
-        const feedback = document.getElementById("copyFeedback");
-        feedback.textContent = "המספר 052-6779649 הועתק! כעת ניתן להדביק באפליקציית bit ✓";
-        setTimeout(() => { feedback.textContent = ""; }, 5000);
-      });
+      const feedback = document.getElementById("copyFeedback");
+      const show = (msg) => {
+        feedback.textContent = msg;
+        clearTimeout(copyBitNumber._t);
+        copyBitNumber._t = setTimeout(() => { feedback.textContent = ""; }, 6000);
+      };
+
+      /* clipboard API קיים רק ב-HTTPS/localhost — אחרת ניפול לבחירה ידנית */
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(BIT_NUMBER)
+          .then(() => show("המספר " + BIT_DISPLAY + " הועתק! כעת ניתן להדביק באפליקציית bit ✓"))
+          .catch(() => selectBitNumber(show));
+      } else {
+        selectBitNumber(show);
+      }
+    }
+
+    /* גיבוי: מסמנים את המספר על המסך כדי שאפשר יהיה להעתיק בלחיצה ארוכה */
+    function selectBitNumber(show) {
+      const el = document.getElementById("bitNumber");
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      show("ההעתקה האוטומטית לא נתמכת בדפדפן הזה — המספר מסומן, אפשר להעתיק אותו ידנית");
+    }
+
+    /* ---------- טופס ההרשמה ---------- */
+    const form = document.getElementById("registerForm");
+    const statusEl = document.getElementById("formStatus");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const setStatus = (text, kind) => {
+      statusEl.textContent = text;
+      statusEl.className = "form-status" + (kind ? " is-" + kind : "");
+    };
+
+    /* טלפון ישראלי: 10 ספרות שמתחילות ב-05, או 9 ספרות עם קידומת קו נייח */
+    const validPhone = (v) => /^0(5\d|[2-489])\d{7}$/.test(v.replace(/[\s\-()]/g, ""));
+    const validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+
+      const data = {
+        full_name: form.full_name.value.trim(),
+        phone: form.phone.value.trim(),
+        email: form.email.value.trim(),
+        pregnancy_week: form.pregnancy_week.value.trim()
+      };
+
+      if (data.full_name.length < 2) return setStatus("נא למלא שם פרטי ומשפחה", "error");
+      if (!validPhone(data.phone))  return setStatus("מספר הטלפון לא נראה תקין — למשל 050-0000000", "error");
+      if (!validEmail(data.email))  return setStatus("כתובת האימייל לא נראית תקינה", "error");
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "שולחת…";
+      setStatus("שולחת את הפרטים…", "pending");
+
+      try {
+        if (SCRIPT_URL.indexOf("PASTE_YOUR") === 0) throw new Error("script_url_not_set");
+
+        /* URLSearchParams = בקשה "פשוטה", בלי preflight שנחסם ע"י Apps Script */
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: new URLSearchParams(data)
+        });
+        const out = await res.json();
+        if (!out.ok) throw new Error(out.error || "server_error");
+
+        onRegistered(data);
+
+      } catch (err) {
+        /* הרשמה לא נעלמת בשקט: מציעים מסלול וואטסאפ עם כל הפרטים מוכנים */
+        console.error("registration failed:", err);
+        const msg =
+          "היי דורית, אני רוצה להירשם לריטריט נושמות לידה.\n" +
+          "שם: " + data.full_name + "\nטלפון: " + data.phone +
+          "\nאימייל: " + data.email + "\nשבוע הריון: " + (data.pregnancy_week || "—");
+        statusEl.className = "form-status is-error";
+        statusEl.innerHTML =
+          "השליחה נכשלה — אבל הפרטים שלך לא אבדו. " +
+          '<a href="https://wa.me/' + WA_NUMBER + "?text=" + encodeURIComponent(msg) +
+          '" target="_blank" rel="noopener"><strong>לחצי כאן לשליחה בוואטסאפ</strong></a>';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "🌸 שליחת פרטים והמשך לתשלום";
+      }
+    });
+
+    /* הרשמה נרשמה — מחברים בין הטופס לתשלום, שלא יישארו שני איים נפרדים */
+    function onRegistered(data) {
+      form.reset();
+      setStatus("הפרטים נשמרו, " + data.full_name.split(" ")[0] + "! המקום שלך משוריין ל-24 שעות — להשלמת ההרשמה נותר להעביר 280 ₪ בביט 🌸", "success");
+
+      const box = document.querySelector(".payment-box");
+      box.scrollIntoView({ behavior: "smooth", block: "center" });
+      box.classList.add("is-highlighted");
+      setTimeout(() => box.classList.remove("is-highlighted"), 4000);
     }
   </script>
 
