@@ -875,26 +875,24 @@
           <div class="price-tag">350 ₪</div>
 
           <p class="pay-lead">
-            המקום משוריין סופית לאחר התשלום.
+            המקום משוריין סופית לאחר התשלום.<br>
+            <strong>הסכום כבר מוגדר בקישור</strong> — אין צורך להקליד מספר או סכום.
           </p>
 
-          <!-- כפתור התשלום הישיר מנוטרל זמנית.
-               קישור "איסוף הכסף" הזה מוגדר ל-280 ש"ח, והמחיר עלה ל-350.
-               הסכום שמור בתוך האיסוף באפליקציית bit ולא בכתובת, ולכן אי אפשר
-               לשנות אותו מכאן - דורית צריכה לעדכן את האיסוף או ליצור חדש.
-               ברגע שיש קישור עם 350, מסירים את ההערה הזו ומעדכנים את הסכום:
+          <!-- הסכום (350 ש"ח) שמור בתוך איסוף הכסף באפליקציית bit, לא בכתובת.
+               אם המחיר ישתנה שוב - דורית צריכה לעדכן את האיסוף באפליקציה,
+               ובמקביל חייבים לעדכן כאן את הטקסט, אחרת הם יסתרו זה את זה. -->
           <a class="btn-bit btn-bit-primary" href="https://www.bitpay.co.il/app/share-info?i=xfIzmV2U&amp;j=true" target="_blank" rel="noopener">
             לתשלום 350 ₪ ב-bit
           </a>
           <p class="pay-note">הקישור פותח את אפליקציית bit עם הסכום מוכן 🔒</p>
-          -->
 
-          <details class="pay-manual" open>
-            <summary>תשלום באפליקציית bit</summary>
+          <details class="pay-manual">
+            <summary>מעדיפה להעביר ידנית?</summary>
             <div class="pay-manual-body">
-              <p>להעברת 350 ₪ ב-bit למספר:</p>
+              <p>אפשר להעביר 350 ₪ ב-bit למספר:</p>
               <div class="bit-phone-display" id="bitNumber">052-6779649</div>
-              <button type="button" class="btn-bit" onclick="copyBitNumber()">
+              <button type="button" class="btn-bit btn-bit-ghost" onclick="copyBitNumber()">
                 📋 העתקת המספר
               </button>
               <div class="copy-feedback" id="copyFeedback"></div>
