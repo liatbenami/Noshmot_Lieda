@@ -324,7 +324,7 @@
       object-fit: cover;
       object-position: center 20%;
       display: block;
-      margin: 0 auto 22px auto;
+      margin: 0 auto 16px auto;
       -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 86%, rgba(0,0,0,0) 100%);
       mask-image: radial-gradient(circle at 50% 50%, #000 86%, rgba(0,0,0,0) 100%);
       filter: drop-shadow(0 12px 20px rgba(79, 90, 69, .26));
@@ -336,12 +336,36 @@
       filter: drop-shadow(0 18px 26px rgba(79, 90, 69, .32));
     }
 
+    .host-id {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 58px;
+      margin-bottom: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(116, 128, 104, .18);
+    }
+
     .host-name {
-      font-size: 1.45rem;
+      font-size: 1.32rem;
       font-weight: 800;
       color: var(--brand-burgundy);
-      margin-bottom: 6px;
+      text-align: right;
+      line-height: 1.25;
     }
+
+    .host-logo {
+      height: 56px;
+      width: auto;
+      max-width: 92px;
+      object-fit: contain;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      mix-blend-mode: multiply;
+    }
+
+    .host-logo[src$=".png"] { mix-blend-mode: normal; }
 
     .host-role {
       font-size: 1rem;
@@ -683,7 +707,10 @@
         <div class="host-card">
           <div>
             <img src="lili.jpg" alt="לילי יחזקאל" class="host-avatar">
+            <div class="host-id">
             <h3 class="host-name">לילי יחזקאל</h3>
+            <img src="logo-lili.jpg" alt="הלוגו של לילי יחזקאל" class="host-logo">
+          </div>
             <div class="host-role">מיילדת מוסמכת ומדריכת הכנה ללידה והנקה</div>
             <p class="host-bio">
               מיילדת מנוסה מחדר הלידה, מלווה זוגות ונשים לקראת לידה בגישה מעשית, רגועה ומעצימה בגובה העיניים
@@ -698,7 +725,10 @@
         <div class="host-card">
           <div>
             <img src="dorit.jpg" alt="דורית ארנסט" class="host-avatar">
+            <div class="host-id">
             <h3 class="host-name">דורית ארנסט</h3>
+            <img src="logo-dorit.jpg" alt="הלוגו של דורית ארנסט" class="host-logo">
+          </div>
             <div class="host-role">דולה פוסט-פארטום ברוח האיורוודה</div>
             <p class="host-bio">
               מלווה נשים לפני ואחרי הריון ולידה, מנחת מעגלי נשים ומביאה ידע מעמיק בתמיכה בגוף ובנפש בימים שאחרי הלידה
@@ -713,7 +743,10 @@
         <div class="host-card">
           <div>
             <img src="lial.jpg" alt="ליאל ארמוזה שקולניק" class="host-avatar">
+            <div class="host-id">
             <h3 class="host-name">ליאל ארמוזה שקולניק</h3>
+            <img src="logo-liel.png" alt="הלוגו של LAS Naturals" class="host-logo">
+          </div>
             <div class="host-role">ארומתרפיסטית מוסמכת ומייסדת LAS Naturals</div>
             <p class="host-bio">
               מתמחה ברוקחות טבעית מותאמת אישית לנשים בהריון, לידה ותקופת ההנקה תוך שימוש בחומרי גלם טבעיים וטהורים
