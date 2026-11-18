@@ -786,7 +786,7 @@
           </button>
           <div class="copy-feedback" id="copyFeedback"></div>
 
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 12px;">
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 12px;" id="payHint">
             * בהעברה בביט אנא צייני את שמך המלא בהערה
           </p>
         </div>
@@ -806,6 +806,11 @@
   <script>
     /* כתובת ה-Web app של Apps Script. אחרי Deploy מדביקים אותה כאן. */
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEW-B8autD0aQV-6aaVq1kkS94BD1LMC2txr7VeZIhAn-41BeYNDIZqo-XbTYlXy-5/exec";
+
+    /* קישור "איסוף כסף" של ביט עם 280 ₪ מוגדרים מראש.
+       ברגע שמדביקים אותו כאן, הכפתור הופך מהעתקת מספר לתשלום בלחיצה אחת.
+       עובד גם עם קישור תשלום של ספק (Grow / Cardcom) אם תעברו לכזה. */
+    const BIT_PAY_LINK = "";
 
     const BIT_NUMBER = "0526779649";
     const BIT_DISPLAY = "052-6779649";
@@ -840,6 +845,28 @@
       sel.addRange(range);
       show("ההעתקה האוטומטית לא נתמכת בדפדפן הזה — המספר מסומן, אפשר להעתיק אותו ידנית");
     }
+
+    /* אם הוגדר קישור תשלום — הכפתור הופך מ"העתקת מספר" ל"תשלום בלחיצה".
+       בלי קישור, נשאר המסלול הידני. כך העמוד תמיד תקין. */
+    function setupPayButton() {
+      if (!BIT_PAY_LINK) return;
+
+      const btn = document.querySelector(".btn-bit");
+      const link = document.createElement("a");
+      link.className = btn.className;
+      link.href = BIT_PAY_LINK;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "💸 לתשלום 280 ₪ ב-bit";
+      link.style.display = "block";
+      link.style.textDecoration = "none";
+      btn.replaceWith(link);
+
+      /* המספר נשאר על המסך כגיבוי למי שהכפתור לא עובד אצלה */
+      document.getElementById("payHint").textContent =
+        "* הסכום כבר מוגדר בקישור. לחלופין ניתן להעביר ידנית למספר " + BIT_DISPLAY;
+    }
+    setupPayButton();
 
     /* ---------- טופס ההרשמה ---------- */
     const form = document.getElementById("registerForm");
