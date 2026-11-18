@@ -717,7 +717,7 @@
         <div class="fact">
           <div class="fact-label">עלות השתתפות</div>
           <div class="fact-oval">
-            <div class="fact-value">280 ש"ח</div>
+            <div class="fact-value">350 ש"ח</div>
             <div class="fact-sub">כולל ערכה אישית</div>
           </div>
         </div>
@@ -872,28 +872,33 @@
         <div class="payment-box">
           <span class="bit-badge">תשלום מהיר ב-bit</span>
           <h3 style="color: var(--brand-burgundy); font-size: 1.4rem;">הסדרת תשלום לריטריט</h3>
-          <div class="price-tag">280 ₪</div>
+          <div class="price-tag">350 ₪</div>
 
           <p class="pay-lead">
-            המקום משוריין סופית לאחר התשלום.<br>
-            <strong>הסכום כבר מוגדר בקישור</strong> — אין צורך להקליד מספר או סכום.
+            המקום משוריין סופית לאחר התשלום.
           </p>
 
+          <!-- כפתור התשלום הישיר מנוטרל זמנית.
+               קישור "איסוף הכסף" הזה מוגדר ל-280 ש"ח, והמחיר עלה ל-350.
+               הסכום שמור בתוך האיסוף באפליקציית bit ולא בכתובת, ולכן אי אפשר
+               לשנות אותו מכאן - דורית צריכה לעדכן את האיסוף או ליצור חדש.
+               ברגע שיש קישור עם 350, מסירים את ההערה הזו ומעדכנים את הסכום:
           <a class="btn-bit btn-bit-primary" href="https://www.bitpay.co.il/app/share-info?i=xfIzmV2U&amp;j=true" target="_blank" rel="noopener">
-            לתשלום 280 ₪ ב-bit
+            לתשלום 350 ₪ ב-bit
           </a>
           <p class="pay-note">הקישור פותח את אפליקציית bit עם הסכום מוכן 🔒</p>
+          -->
 
-          <details class="pay-manual">
-            <summary>מעדיפה להעביר ידנית?</summary>
+          <details class="pay-manual" open>
+            <summary>תשלום באפליקציית bit</summary>
             <div class="pay-manual-body">
-              <p>אפשר להעביר ב-bit למספר:</p>
+              <p>להעברת 350 ₪ ב-bit למספר:</p>
               <div class="bit-phone-display" id="bitNumber">052-6779649</div>
-              <button type="button" class="btn-bit btn-bit-ghost" onclick="copyBitNumber()">
+              <button type="button" class="btn-bit" onclick="copyBitNumber()">
                 📋 העתקת המספר
               </button>
               <div class="copy-feedback" id="copyFeedback"></div>
-              <p class="pay-note">* בהעברה ידנית אנא צייני את שמך המלא בהערה, כדי שנדע לשריין את מקומך</p>
+              <p class="pay-note">* אנא צייני את שמך המלא בהערה, כדי שנדע לשריין את מקומך</p>
             </div>
           </details>
         </div>
@@ -1014,7 +1019,7 @@
     /* הרשמה נרשמה — מחברים בין הטופס לתשלום, שלא יישארו שני איים נפרדים */
     function onRegistered(data) {
       form.reset();
-      setStatus("הפרטים נשמרו, " + data.full_name.split(" ")[0] + "! המקום שלך משוריין ל-24 שעות — להשלמת ההרשמה נותר להעביר 280 ₪ בביט 🌸", "success");
+      setStatus("הפרטים נשמרו, " + data.full_name.split(" ")[0] + "! המקום שלך משוריין ל-24 שעות — להשלמת ההרשמה נותר להעביר 350 ₪ בביט 🌸", "success");
 
       const box = document.querySelector(".payment-box");
       box.scrollIntoView({ behavior: "smooth", block: "center" });
