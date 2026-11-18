@@ -6,6 +6,7 @@
   <title>נושמות לידה | ריטריט עוטף להריוניות במלון יולדות צפון</title>
   
   <!-- גוגל פונטס - Assistant -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
@@ -635,6 +636,12 @@
       .payment-box.is-highlighted { animation: none; outline: 3px solid var(--bit-turquoise); }
     }
 
+    /* הכותרת דביקה, ולכן קפיצה לעוגן מסתירה את ראש הסקשן מתחתיה.
+       scroll-margin-top עוצר את הגלילה מתחת לכותרת במקום מאחוריה. */
+    section[id] {
+      scroll-margin-top: 140px;
+    }
+
     /* Floating WhatsApp */
     .floating-wa {
       position: fixed;
@@ -664,6 +671,21 @@
       .hero-img-box img { height: 230px; }
       .schedule-item { flex-direction: column; gap: 10px; }
       .register-wrapper { grid-template-columns: 1fr; }
+
+      /* אצבע צריכה 44px לפחות. הצמצום הוריד את השדות ל-42,
+         אז בנייד מחזירים קצת ריווח - בלי לוותר על הטופס הדחוס בדסקטופ. */
+      .form-control { padding: 13px 14px; }
+      .pay-manual summary { padding: 11px 0; }
+
+      /* 16px מונע מ-iOS להגדיל את העמוד בכניסה לשדה */
+      .form-control, .form-control::placeholder { font-size: 16px; }
+
+      .btn-bit-primary { font-size: 1.1rem; }
+      .form-box { padding: 24px 18px; }
+      .payment-box { padding: 28px 18px; }
+
+      /* כפתור הוואטסאפ הצף לא יסתיר תוכן בתחתית הטופס */
+      .pay-manual { padding-bottom: 10px; }
     }
   </style>
 </head>
