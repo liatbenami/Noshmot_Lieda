@@ -502,6 +502,71 @@
       background-color: #00968e;
     }
 
+    /* כפתור התשלום הראשי */
+    .btn-bit-primary {
+      font-size: 1.18rem;
+      padding: 17px 20px;
+      box-shadow: 0 6px 18px rgba(0, 178, 169, .32);
+      margin-bottom: 6px;
+    }
+    .btn-bit-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 178, 169, .4);
+    }
+
+    .pay-lead {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin: 10px 0 20px;
+    }
+
+    .pay-note {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin: 8px 0 0;
+      line-height: 1.5;
+    }
+
+    /* העברה ידנית — אופציה משנית, מקופלת */
+    .pay-manual {
+      margin-top: 22px;
+      border-top: 1px solid rgba(88, 36, 48, .12);
+      padding-top: 16px;
+      text-align: center;
+    }
+    .pay-manual summary {
+      cursor: pointer;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      list-style: none;
+    }
+    .pay-manual summary::-webkit-details-marker { display: none; }
+    .pay-manual summary::after {
+      content: " ⌄";
+      display: inline-block;
+      transition: transform .2s;
+    }
+    .pay-manual[open] summary::after { transform: rotate(180deg); }
+    .pay-manual summary:hover { color: var(--brand-burgundy); }
+    .pay-manual-body { margin-top: 10px; }
+    .pay-manual-body > p:first-child {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .pay-manual .bit-phone-display { font-size: 1.25rem; margin: 12px 0; }
+
+    .btn-bit-ghost {
+      background-color: transparent;
+      color: #00847d;
+      border: 2px solid var(--bit-turquoise);
+      font-size: 0.98rem;
+      padding: 11px 18px;
+    }
+    .btn-bit-ghost:hover { background-color: var(--bit-turquoise); color: #fff; }
+
     .copy-feedback {
       font-size: 0.9rem;
       color: #008078;
@@ -808,20 +873,29 @@
           <span class="bit-badge">תשלום מהיר ב-bit</span>
           <h3 style="color: var(--brand-burgundy); font-size: 1.4rem;">הסדרת תשלום לריטריט</h3>
           <div class="price-tag">280 ₪</div>
-          <p style="color: var(--text-muted); font-size: 0.98rem;">
-            להשלמת ההרשמה ושריון המקום סופית, ניתן להעביר תשלום באפליקציית <strong>bit</strong> למספר:
+
+          <p class="pay-lead">
+            המקום משוריין סופית לאחר התשלום.<br>
+            <strong>הסכום כבר מוגדר בקישור</strong> — אין צורך להקליד מספר או סכום.
           </p>
 
-          <div class="bit-phone-display" id="bitNumber">052-6779649</div>
+          <a class="btn-bit btn-bit-primary" href="https://www.bitpay.co.il/app/share-info?i=xfIzmV2U&amp;j=true" target="_blank" rel="noopener">
+            לתשלום 280 ₪ ב-bit
+          </a>
+          <p class="pay-note">הקישור פותח את אפליקציית bit עם הסכום מוכן 🔒</p>
 
-          <button type="button" class="btn-bit" onclick="copyBitNumber()">
-            📋 העתקת מספר לתשלום ב-bit
-          </button>
-          <div class="copy-feedback" id="copyFeedback"></div>
-
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 12px;" id="payHint">
-            * בהעברה בביט אנא צייני את שמך המלא בהערה
-          </p>
+          <details class="pay-manual">
+            <summary>מעדיפה להעביר ידנית?</summary>
+            <div class="pay-manual-body">
+              <p>אפשר להעביר ב-bit למספר:</p>
+              <div class="bit-phone-display" id="bitNumber">052-6779649</div>
+              <button type="button" class="btn-bit btn-bit-ghost" onclick="copyBitNumber()">
+                📋 העתקת המספר
+              </button>
+              <div class="copy-feedback" id="copyFeedback"></div>
+              <p class="pay-note">* בהעברה ידנית אנא צייני את שמך המלא בהערה, כדי שנדע לשריין את מקומך</p>
+            </div>
+          </details>
         </div>
 
       </div>
@@ -839,11 +913,6 @@
   <script>
     /* כתובת ה-Web app של Apps Script. אחרי Deploy מדביקים אותה כאן. */
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEW-B8autD0aQV-6aaVq1kkS94BD1LMC2txr7VeZIhAn-41BeYNDIZqo-XbTYlXy-5/exec";
-
-    /* קישור "איסוף כסף" של ביט עם 280 ₪ מוגדרים מראש.
-       ברגע שמדביקים אותו כאן, הכפתור הופך מהעתקת מספר לתשלום בלחיצה אחת.
-       עובד גם עם קישור תשלום של ספק (Grow / Cardcom) אם תעברו לכזה. */
-    const BIT_PAY_LINK = "";
 
     const BIT_NUMBER = "0526779649";
     const BIT_DISPLAY = "052-6779649";
@@ -878,28 +947,6 @@
       sel.addRange(range);
       show("ההעתקה האוטומטית לא נתמכת בדפדפן הזה — המספר מסומן, אפשר להעתיק אותו ידנית");
     }
-
-    /* אם הוגדר קישור תשלום — הכפתור הופך מ"העתקת מספר" ל"תשלום בלחיצה".
-       בלי קישור, נשאר המסלול הידני. כך העמוד תמיד תקין. */
-    function setupPayButton() {
-      if (!BIT_PAY_LINK) return;
-
-      const btn = document.querySelector(".btn-bit");
-      const link = document.createElement("a");
-      link.className = btn.className;
-      link.href = BIT_PAY_LINK;
-      link.target = "_blank";
-      link.rel = "noopener";
-      link.textContent = "💸 לתשלום 280 ₪ ב-bit";
-      link.style.display = "block";
-      link.style.textDecoration = "none";
-      btn.replaceWith(link);
-
-      /* המספר נשאר על המסך כגיבוי למי שהכפתור לא עובד אצלה */
-      document.getElementById("payHint").textContent =
-        "* הסכום כבר מוגדר בקישור. לחלופין ניתן להעביר ידנית למספר " + BIT_DISPLAY;
-    }
-    setupPayButton();
 
     /* ---------- טופס ההרשמה ---------- */
     const form = document.getElementById("registerForm");
