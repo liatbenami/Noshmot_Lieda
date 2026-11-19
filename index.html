@@ -321,9 +321,17 @@
       font-style: italic;
       font-weight: 700;
       color: var(--brand-plum);
-      /* רווח קטן לפני השם. ב-RTL הצד ה"מתחיל" הוא הימני, כלומר
-         הצד שפונה למילה שלפניו. 3px = בערך חצי רווח נוסף. */
-      margin-inline-start: 3px;
+    }
+
+    /* שם המנחה יושב בשורה משלו, מתחת לכותרת המפגש.
+       מילת הקישור ("עם" / "בהנחיית") יורדת איתו, כדי שהכותרת
+       לא תסתיים במילה תלויה באוויר. */
+    .sched-with {
+      display: block;
+      font-size: .97rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+      margin-bottom: 3px;
     }
 
     @media (max-width: 560px) {
@@ -792,17 +800,17 @@
 
         <div class="sched-row">
           <div class="sched-time">16:30</div>
-          <div class="sched-text"><span class="sched-title">שיחה בגובה העיניים עם <em class="sched-host">לילי יחזקאל</em></span><span class="sched-dot">•</span>הכנה מעשית ללידה מבוססת ניסיון מחדר הלידה: מתי לפנות למיון, סימנים מבשרי לידה, התמודדות עם כאב בחדר לידה ומתן כלים טבעיים</div>
+          <div class="sched-text"><span class="sched-title">שיחה בגובה העיניים</span><span class="sched-with">עם <em class="sched-host">לילי יחזקאל</em></span><span class="sched-dot">•</span>הכנה מעשית ללידה מבוססת ניסיון מחדר הלידה: מתי לפנות למיון, סימנים מבשרי לידה, התמודדות עם כאב בחדר לידה ומתן כלים טבעיים</div>
         </div>
 
         <div class="sched-row">
           <div class="sched-time">17:30</div>
-          <div class="sched-text"><span class="sched-title">הלידה והיום שאחרי (פוסט-פארטום) עם <em class="sched-host">דורית ארנסט</em></span><span class="sched-dot">•</span>שיחה ומתן כלים מעשיים ללידה ולהתאוששות הגוף, תזונה מחלימה לתמיכה בך והתאקלמות פיזית ונפשית בבית עם התינוק</div>
+          <div class="sched-text"><span class="sched-title">הלידה והיום שאחרי (פוסט-פארטום)</span><span class="sched-with">עם <em class="sched-host">דורית ארנסט</em></span><span class="sched-dot">•</span>שיחה ומתן כלים מעשיים ללידה ולהתאוששות הגוף, תזונה מחלימה לתמיכה בך והתאקלמות פיזית ונפשית בבית עם התינוק</div>
         </div>
 
         <div class="sched-row">
           <div class="sched-time">18:15</div>
-          <div class="sched-text"><span class="sched-title">סדנת רוקחות טבעית בהנחיית <em class="sched-host">ליאל ארמוזה שקולניק</em></span><span class="sched-dot">•</span>כל משתתפת תלמד על כוחם של הצמחים ותרקח לעצמה שני מוצרים אישיים לקחת הביתה: <strong>שמן עיסוי אישי ללידה</strong> ו<strong>משחה לפטמות רגישות וסדוקות</strong></div>
+          <div class="sched-text"><span class="sched-title">סדנת רוקחות טבעית</span><span class="sched-with">בהנחיית <em class="sched-host">ליאל ארמוזה שקולניק</em></span><span class="sched-dot">•</span>כל משתתפת תלמד על כוחם של הצמחים ותרקח לעצמה שני מוצרים אישיים לקחת הביתה: <strong>שמן עיסוי אישי ללידה</strong> ו<strong>משחה לפטמות רגישות וסדוקות</strong></div>
         </div>
 
         <div class="sched-row">
