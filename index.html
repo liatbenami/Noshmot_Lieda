@@ -266,6 +266,9 @@
 
     /* בנייד: שתיים בשורה, שתי שורות, והזיגזג נשאר */
     @media (max-width: 560px) {
+      /* הכפתור נשבר לשתי שורות והלב נשאר לבד - nowrap עם פונט מתכווץ פותר */
+      .hero .btn-cta { white-space: nowrap; font-size: clamp(.95rem, 4.6vw, 1.25rem); }
+
       .facts { gap: 12px; padding: 20px 0 26px; }
       .fact-oval {
         width: min(156px, 43vw);
