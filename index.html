@@ -321,6 +321,9 @@
       font-style: italic;
       font-weight: 700;
       color: var(--brand-plum);
+      /* רווח קטן לפני השם. ב-RTL הצד ה"מתחיל" הוא הימני, כלומר
+         הצד שפונה למילה שלפניו. 3px = בערך חצי רווח נוסף. */
+      margin-inline-start: 3px;
     }
 
     @media (max-width: 560px) {
